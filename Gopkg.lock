@@ -1,0 +1,19 @@
+memo = "7abe5c5746a5f06279fd5c501318ab63b64e66fe2be8fe2b33a2c53ef396ee62"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/Sirupsen/logrus"
+  packages = ["."]
+  revision = "10f801ebc38b33738c9d17d50860f484a0988ff5"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/ilackarms/pkg"
+  packages = ["errors"]
+  revision = "ddb4eb6bc9e902caedd57f3132586ecc4cb34f09"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/sys"
+  packages = ["unix"]
+  revision = "9f30dcbe5be197894515a338a9bda9253567ea8f"
