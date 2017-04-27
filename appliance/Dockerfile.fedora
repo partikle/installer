@@ -4,8 +4,8 @@ RUN dnf install golang -y
 ENV GOPATH=/go
 ENV INSTALLER_HOME=/go/src/github.com/partikle/installer
 RUN mkdir -p ${INSTALLER_HOME}
-COPY . /go/src/github.com/partikle/installer
+COPY ../ /go/src/github.com/partikle/installer
 RUN cd $INSTALLER_HOME && \
     go build -o installer . && \
     mv installer /usr/local/bin
-CMD ./installer -w /opt -o /usr/local -p both
+RUN ./installer -w /opt -o /usr/local -p both

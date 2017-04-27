@@ -1,0 +1,16 @@
+sudo: required
+language: go
+
+go:
+  - 1.7
+  - master
+
+services:
+  - docker
+
+install:
+  - go get github.com/onsi/ginkgo/ginkgo
+  - go get github.com/onsi/gomega
+
+script:
+  - ginkgo -r -v .
