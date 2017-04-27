@@ -11,6 +11,7 @@ var ubuntuPackages = []string{
 	"curl",
 	"git",
 	"build-essential",
+	"zlib1g-dev",
 }
 
 func installUbuntu(out io.Writer) error {

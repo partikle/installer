@@ -17,7 +17,7 @@ var fedoraPackages = []string{
 }
 
 func installFedora(out io.Writer) error {
-	if err := exec.RunCommand(out, "dnf", "update"); err != nil {
+	if err := exec.RunCommand(out, "dnf", "update", "-y"); err != nil {
 		return err
 	}
 	args := []string{

@@ -10,12 +10,13 @@ import (
 	"github.com/partikle/installer/pkg/exec"
 	"github.com/partikle/installer/pkg/test"
 	"github.com/pborman/uuid"
+	"path/filepath"
 )
 
 var _ = Describe("Docker", func() {
 	var (
-		fedoraDockerfile = "Dockerfile.fedora"
-		ubuntuDockerfile = "Dockerfile.ubuntu"
+		fedoraDockerfile = "appliance/Dockerfile.fedora"
+		ubuntuDockerfile = "appliance/Dockerfile.ubuntu"
 		fedoraImageName  = uuid.New()
 		ubuntuImageName  = uuid.New()
 		wd               string
@@ -25,13 +26,14 @@ var _ = Describe("Docker", func() {
 		BeforeEach(func() {
 			wd, err = test.GetCurrentDir()
 			Expect(err).NotTo(HaveOccurred())
+			wd = filepath.Join(wd, "..")
 		})
 		for dockerfile, imageName := range map[string]string{
 			fedoraDockerfile: fedoraImageName,
 			ubuntuDockerfile: ubuntuImageName,
 		} {
 			It("should build "+dockerfile+" with rumprun installed", func() {
-				cmd := exec.Command(os.Stdout, "docker", "build", "-t", imageName, "-f", dockerfile, wd)
+				cmd := exec.Command(os.Stdout, "docker", "build", "-t", imageName, "-f", dockerfile, wd).Dir(wd)
 				defer exec.RunCommand(os.Stdout, "docker", "rmi", "-f", imageName)
 				err = cmd.Run()
 				Expect(err).NotTo(HaveOccurred())
