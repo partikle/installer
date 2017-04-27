@@ -23,7 +23,7 @@ func Install(out io.Writer) error {
 		return installUbuntu(out)
 	}
 	if strings.Contains(versionData, fedora) {
-		return errors.New("fedora not yet supported", nil)
+		return installFedora(out)
 	}
 	return errors.New("unknown distro type: "+string(versionData), nil)
 }
