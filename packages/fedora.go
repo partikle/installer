@@ -2,6 +2,8 @@ package packages
 
 import (
 	"io"
+
+	"github.com/partikle/installer/pkg/exec"
 )
 
 var fedoraPackages = []string{
@@ -15,7 +17,7 @@ var fedoraPackages = []string{
 }
 
 func installFedora(out io.Writer) error {
-	if err := command(out, "dnf", "update"); err != nil {
+	if err := exec.RunCommand(out, "dnf", "update"); err != nil {
 		return err
 	}
 	args := []string{
@@ -24,7 +26,7 @@ func installFedora(out io.Writer) error {
 		"-y",
 	}
 	args = append(args, fedoraPackages...)
-	if err := command(out, args...); err != nil {
+	if err := exec.RunCommand(out, args...); err != nil {
 		return err
 	}
 	return nil

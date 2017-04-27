@@ -2,6 +2,8 @@ package packages
 
 import (
 	"io"
+
+	"github.com/partikle/installer/pkg/exec"
 )
 
 var ubuntuPackages = []string{
@@ -12,7 +14,7 @@ var ubuntuPackages = []string{
 }
 
 func installUbuntu(out io.Writer) error {
-	if err := command(out, "apt", "update"); err != nil {
+	if err := exec.RunCommand(out, "apt", "update"); err != nil {
 		return err
 	}
 	args := []string{
@@ -21,7 +23,7 @@ func installUbuntu(out io.Writer) error {
 		"-y",
 	}
 	args = append(args, ubuntuPackages...)
-	if err := command(out, args...); err != nil {
+	if err := exec.RunCommand(out, args...); err != nil {
 		return err
 	}
 	return nil

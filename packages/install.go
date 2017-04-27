@@ -1,12 +1,11 @@
 package packages
 
 import (
-	"fmt"
-	"github.com/ilackarms/pkg/errors"
 	"io"
 	"io/ioutil"
-	"os/exec"
 	"strings"
+
+	"github.com/ilackarms/pkg/errors"
 )
 
 const (
@@ -34,16 +33,4 @@ func getVersion() (string, error) {
 		return "", errors.New("failed to get /proc/version", err)
 	}
 	return string(versionData), nil
-}
-
-func command(out io.Writer, args ...string) error {
-	fmt.Fprintf(out, "running command: %v\n", args)
-	cmd := exec.Command(args[0])
-	cmd.Args = args
-	cmd.Stdout = out
-	cmd.Stderr = out
-	if err := cmd.Run(); err != nil {
-		return errors.New("failed running command "+strings.Join(args, " "), err)
-	}
-	return nil
 }
