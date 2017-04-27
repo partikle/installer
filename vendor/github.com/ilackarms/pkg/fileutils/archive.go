@@ -3,11 +3,11 @@ package fileutils
 import (
 	"archive/tar"
 	log "github.com/Sirupsen/logrus"
-	"github.com/ilackarms/pkg/errors"
 	"io"
 	"os"
-	"os/exec"
 	"path"
+	"os/exec"
+	"github.com/ilackarms/pkg/errors"
 )
 
 func ExtractTar(tarArchive io.ReadCloser, localFolder string) error {
@@ -61,7 +61,7 @@ func ExtractTar(tarArchive io.ReadCloser, localFolder string) error {
 func Compress(source, destination string) error {
 	tarCmd := exec.Command("tar", "cf", destination, "-C", source, ".")
 	if out, err := tarCmd.Output(); err != nil {
-		return errors.New("running tar command: "+string(out), err)
+		return errors.New("running tar command: " + string(out), err)
 	}
 	return nil
 }
