@@ -7,4 +7,5 @@ RUN mkdir -p ${INSTALLER_HOME}
 COPY . /go/src/github.com/partikle/installer
 RUN cd $INSTALLER_HOME && \
     go build -o installer . && \
-    ./installer
+    mv installer /usr/local/bin
+CMD ./installer -w /opt -o /usr/local -p both
