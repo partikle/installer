@@ -21,6 +21,13 @@ func BuildRump(out io.Writer, workdir, rumpdir, platform string) error {
 	}
 	if err := exec.Command(out,
 		"git",
+		"checkout",
+		"16a7c6eb44523c60ea714a0ec2c7ea6ab3c8fb02",
+	).Dir(filepath.Join(workdir, "rumprun")).Run(); err != nil {
+		return err
+	}
+	if err := exec.Command(out,
+		"git",
 		"submodule",
 		"update",
 		"--init",
