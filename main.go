@@ -5,6 +5,8 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/partikle/installer/packages"
 	"github.com/partikle/installer/rump"
+	"io"
+	"os"
 	"path/filepath"
 )
 
@@ -36,10 +38,19 @@ func main() {
 	}
 
 	log.Info("Installing Partikle!")
-	if err := packages.Install(log.Writer()); err != nil {
+	var w io.Writer
+	if os.Getenv("LOGGING") == "0" {
+		w, err = os.Open("/dev/null")
+		if err != nil {
+			log.Fatalf("error opening /dev/null: %v", err)
+		}
+	} else {
+		w = log.Writer()
+	}
+	if err := packages.Install(w); err != nil {
 		log.Fatal(err)
 	}
-	if err := rump.BuildRump(log.Writer(), wd, rd, *platform); err != nil {
+	if err := rump.BuildRump(w, wd, rd, *platform); err != nil {
 		log.Fatal(err)
 	}
 	log.Info("done!")
