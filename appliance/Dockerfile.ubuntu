@@ -8,4 +8,5 @@ COPY ./ /go/src/github.com/partikle/installer
 RUN cd $INSTALLER_HOME && \
     go build -o installer . && \
     mv installer /usr/local/bin
+ENV LOGGING=0
 RUN installer -w /opt -o /usr/local -p both
