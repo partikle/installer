@@ -9,9 +9,7 @@ import (
 	"github.com/partikle/installer/pkg/exec"
 )
 
-func BuildRump(out io.Writer, workdir, rumpdir, platform string) error {
-	fmt.Fprintf(out, "Building Rumprun for %s, using workdir %s. "+
-		"Binaries will be saved to %s\n", platform, workdir, rumpdir)
+func PrepareRumpRepo(out io.Writer, workdir string) error {
 	if err := exec.Command(out,
 		"git",
 		"clone",
@@ -34,27 +32,33 @@ func BuildRump(out io.Writer, workdir, rumpdir, platform string) error {
 	).Dir(filepath.Join(workdir, "rumprun")).Run(); err != nil {
 		return err
 	}
+	return nil
+}
+
+func BuildRump(out io.Writer, workdir, outdir, platform string) error {
+	fmt.Fprintf(out, "Building Rumprun for %s, using workdir %s. "+
+		"Binaries will be saved to %s\n", platform, workdir, outdir)
 	if platform == "both" {
-		if err := runBuildrumpSH(out, workdir, rumpdir, "hw"); err != nil {
+		if err := runBuildrumpSH(out, workdir, outdir, "hw"); err != nil {
 			return errors.New("failed installing for hw", err)
 		}
-		if err := runBuildrumpSH(out, workdir, rumpdir, "xen"); err != nil {
+		if err := runBuildrumpSH(out, workdir, outdir, "xen"); err != nil {
 			return errors.New("failed installing for hw", err)
 		}
 	} else {
-		if err := runBuildrumpSH(out, workdir, rumpdir, platform); err != nil {
+		if err := runBuildrumpSH(out, workdir, outdir, platform); err != nil {
 			return errors.New("failed installing for "+platform, err)
 		}
 	}
 	return nil
 }
 
-func runBuildrumpSH(out io.Writer, workdir, rumpdir, platform string) error {
+func runBuildrumpSH(out io.Writer, workdir, outdir, platform string) error {
 	buildRR := filepath.Join(workdir, "rumprun", "build-rr.sh")
 	if err := exec.Command(out,
 		buildRR,
 		"-d",
-		rumpdir,
+		outdir,
 		"-o",
 		"./obj",
 		platform,
@@ -67,7 +71,7 @@ func runBuildrumpSH(out io.Writer, workdir, rumpdir, platform string) error {
 	if err := exec.Command(out,
 		buildRR,
 		"-d",
-		rumpdir,
+		outdir,
 		"-o",
 		"./obj",
 		platform,
