@@ -2,23 +2,23 @@ package main
 
 import (
 	"flag"
-	"github.com/Sirupsen/logrus"
-	"github.com/partikle/installer/packages"
-	"github.com/partikle/installer/rump"
 	"io"
 	"os"
 	"path/filepath"
+
+	"github.com/Sirupsen/logrus"
+	"github.com/partikle/installer/install"
 )
 
 func main() {
-	workdir := flag.String("w", "", "directory to build rump in")
-	rumpdir := flag.String("o", "", "output directory for rump binaries")
+	workdirFlag := flag.String("w", "", "directory to build rump in")
+	rumpdirFlag := flag.String("o", "", "output directory for rump binaries")
 	platform := flag.String("p", "", "platform to build for. can be hw, xen, or both")
 	flag.Parse()
 	log := logrus.New()
 	for name, value := range map[string]string{
-		"workdir":  *workdir,
-		"rumpdir":  *rumpdir,
+		"workdir":  *workdirFlag,
+		"outdir":   *rumpdirFlag,
 		"platform": *platform,
 	} {
 		if value == "" {
@@ -28,13 +28,13 @@ func main() {
 	if *platform != "hw" && *platform != "xen" && *platform != "both" {
 		log.Fatal("platform must be one of the following, \"hw\", \"xen\", or\"both\"")
 	}
-	wd, err := filepath.Abs(*workdir)
+	wd, err := filepath.Abs(*workdirFlag)
 	if err != nil {
-		log.Fatalf("failed to find absolute path to %s", *workdir)
+		log.Fatalf("failed to find absolute path to %s", *workdirFlag)
 	}
-	rd, err := filepath.Abs(*rumpdir)
+	outdir, err := filepath.Abs(*rumpdirFlag)
 	if err != nil {
-		log.Fatalf("failed to find absolute path to %s", *rumpdir)
+		log.Fatalf("failed to find absolute path to %s", *rumpdirFlag)
 	}
 
 	log.Info("Installing Partikle!")
@@ -47,10 +47,7 @@ func main() {
 	} else {
 		w = log.Writer()
 	}
-	if err := packages.Install(w); err != nil {
-		log.Fatal(err)
-	}
-	if err := rump.BuildRump(w, wd, rd, *platform); err != nil {
+	if err := install.Run(w, wd, outdir, *platform); err != nil {
 		log.Fatal(err)
 	}
 	log.Info("done!")
